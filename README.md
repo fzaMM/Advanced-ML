@@ -35,6 +35,61 @@ We achieved best results by combining ALS and lightgbm, which offered:
 - Metadata integration: Overcomes ALS's inability to use product/customer features
 - Scalability: Can't run LightGBM on all 100K articles per customer, but can on top 100-500 candidates
 
+Implementation Details:
+
+The hybrid approach is implemented as a two-stage pipeline designed for efficiency and scalability on large-scale transactional data.
+
+1. Candidate Generation (Recall Stage):
+
+  - A time-weighted implicit ALS model (implicit.als.AlternatingLeastSquares) is trained on the user–item interaction matrix.
+  - Each transaction is weighted using exponential time decay, giving more importance to recent purchases and capturing fast-changing fashion trends.
+  - For every user, the model generates a cached list of top-N candidate items (typically top-50).
+  - To increase recall and robustness, ALS candidates are enriched with:
+      -Globally popular items (top sellers in the training window)
+      -Repurchase candidates (items previously bought by the user)
+  This results in approximately 50 candidates per user, reducing the ranking search space by several orders of magnitude.
+
+2. Feature Construction:
+
+  -For each (user, candidate item) pair, a feature vector is built using:
+    - Candidate-level features: ALS score , Popular-item flag , Repurchase flag
+    - User features: Age group , Club membership status , Newsletter engagement , Purchase recency and frequency, Spending and diversity statistics
+    - Item features: Product type and group, Color group and index group, Historical sales volume, Short-term trend indicators (1–4 weeks),Repurchase rate
+    - User–item interaction features: Number of past purchases, Recency in days, Average purchase price ,Category and color affinity
+All interaction features are computed only for candidate items, ensuring strict memory control.
+
+3-Ranking Model
+
+  -Model: LightGBM (binary classification)
+  -Input: ALS candidate items + engineered features
+  -Output: Final relevance score used to rank candidates
+  -Training strategy: One training instance per (user, candidate item) pair, Binary labels indicating whether the item was purchased in the prediction window
+
+4-Evaluation & Metrics
+
+  -Metric: MAP@12 (official Kaggle evaluation metric)
+  -Validation strategy:
+      Time-based train / validation split
+      Labels defined as items purchased in the following week
+      One ranking group per customer
+  -Offline Results (Validation Set):
+  
+    -ALS only:   MAP@12 ≈ 0.0175
+    -ALS + LightGBM (baseline features): MAP@12 ≈ 0.057
+    -ALS + LightGBM (enhanced features): MAP@12 ≈ 0.069
+
+The hybrid model consistently outperformed pure collaborative filtering approaches,
+especially for repeat buyers and medium-activity users.
+
+Results:
+  - The ALS-only baseline provides strong recall but limited personalization.
+  - The hybrid ALS + LightGBM approach consistently improves ranking quality, achieving a significantly higher MAP@12.
+
+Feature importance analysis confirms:
+  -ALS score is the strongest signal
+  -Interaction recency and trend-based item features contribute substantially
+  -User metadata stabilizes predictions for sparse and cold-start users
+  
 Why SASRec Underperformed?
 We initially tried SASRec (Self-Attentive Sequential Recommendation), but encountered limitations:
 
