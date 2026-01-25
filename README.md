@@ -68,7 +68,12 @@ All interaction features are computed only for candidate items, ensuring strict 
   - Binary labels indicating whether the item was purchased in the prediction window  
 
 4-Evaluation and Metrics:
-- **Metric:** MAP@12 (official Kaggle evaluation metric)
+- **Metric:** **MAP@12 (Mean Average Precision at 12)** – official Kaggle evaluation metric  
+  - Measures the quality of the ranked recommendation list **up to 12 items per user**  
+  - **How it works:**  
+    - Computes **average precision** for each user based on whether purchased items appear in the top-12 predictions  
+    - Then averages over all users  
+  - **Range:** 0 (worst, no relevant items in top-12) → 1 (best, all relevant items correctly ranked at the top)  
 
 - **Validation strategy:**  
   - Time-based train / validation split  
