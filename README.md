@@ -79,8 +79,7 @@ All interaction features are computed only for candidate items, ensuring strict 
   - **ALS only:** MAP@12 ≈ **0.0175**  
   - **ALS + LightGBM (baseline features):** MAP@12 ≈ **0.057**  
   - **ALS + LightGBM (enhanced features):** MAP@12 ≈ **0.069**  
-The hybrid model consistently outperformed pure collaborative filtering approaches,
-especially for repeat buyers and medium-activity users.
+
 
 Results:
   - The ALS-only baseline provides strong recall but limited personalization.
