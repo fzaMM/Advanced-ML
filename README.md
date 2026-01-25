@@ -58,8 +58,8 @@ For each (user, candidate item) pair, a feature vector is built using:
   - User–item interaction features: Number of past purchases, Recency in days, Average purchase price ,Category and color affinity
 
 All interaction features are computed only for candidate items, ensuring strict memory control.
-
 3-Ranking Model:
+
   -Model: LightGBM (binary classification)
   -Input: ALS candidate items + engineered features
   -Output: Final relevance score used to rank candidates
