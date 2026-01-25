@@ -59,22 +59,18 @@ For each (user, candidate item) pair, a feature vector is built using:
 
 All interaction features are computed only for candidate items, ensuring strict memory control.
 
-3-Ranking Model
-
+3-Ranking Model:
   -Model: LightGBM (binary classification)
   -Input: ALS candidate items + engineered features
   -Output: Final relevance score used to rank candidates
   -Training strategy: One training instance per (user, candidate item) pair, Binary labels indicating whether the item was purchased in the prediction window
-
 4-Evaluation & Metrics
-
   -Metric: MAP@12 (official Kaggle evaluation metric)
   -Validation strategy:
       Time-based train / validation split
       Labels defined as items purchased in the following week
       One ranking group per customer
   -Offline Results (Validation Set):
-  
     -ALS only:   MAP@12 ≈ 0.0175
     -ALS + LightGBM (baseline features): MAP@12 ≈ 0.057
     -ALS + LightGBM (enhanced features): MAP@12 ≈ 0.069
