@@ -67,7 +67,7 @@ All interaction features are computed only for candidate items, ensuring strict 
   - One training instance per *(user, candidate item)* pair  
   - Binary labels indicating whether the item was purchased in the prediction window  
 
-  
+4-Evaluation and Metrics:
 - **Metric:** MAP@12 (official Kaggle evaluation metric)
 
 - **Validation strategy:**  
