@@ -51,7 +51,7 @@ The hybrid approach is implemented as a two-stage pipeline designed for efficien
 
 2. Feature Construction:
 
-  -For each (user, candidate item) pair, a feature vector is built using:
+For each (user, candidate item) pair, a feature vector is built using:
     - Candidate-level features: ALS score , Popular-item flag , Repurchase flag
     - User features: Age group , Club membership status , Newsletter engagement , Purchase recency and frequency, Spending and diversity statistics
     - Item features: Product type and group, Color group and index group, Historical sales volume, Short-term trend indicators (1–4 weeks),Repurchase rate
